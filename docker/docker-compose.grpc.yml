@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  grpc-mapreduce:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc.mapreduce
+    container_name: grpc-mapreduce
+    environment:
+      - MAPREDUCE_PORT=50051
+      - USERBEHAVIOR_ADDRESS=grpc-userbehavior:50053
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+    depends_on:
+      - grpc-userbehavior
+
+  grpc-userbehavior:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc.userbehavior
+    container_name: grpc-userbehavior
+    environment:
+      - USERBEHAVIOR_PORT=50053
+      - RECOMMENDATION_ADDRESS=grpc-recommendation:50055
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+    depends_on:
+      - grpc-recommendation
+
+  grpc-recommendation:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc.recommendation
+    container_name: grpc-recommendation
+    environment:
+      - RECOMMENDATION_PORT=50055
+    ports:
+      - "50055:50055"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+  
+networks:
+  grpc-network:
+    driver: bridge

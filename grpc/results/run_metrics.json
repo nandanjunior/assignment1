@@ -1,0 +1,7 @@
+{
+  "mapreduce_time": 0.0009984970092773438,
+  "userbehavior_time": 0.0,
+  "recommendation_time": 0.0,
+  "client_total_time": 0.060068368911743164,
+  "num_records": 6
+}
