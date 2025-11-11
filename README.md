@@ -82,7 +82,8 @@ Each service must be started in a **separate terminal** to simulate a distribute
 
 #### 🧮 Terminal 1 — MapReduce Service
 ```bash
-python grpc/server/mapreduce_server.py
+cd grpc/server
+python mapreduce_stream_service.py
 ```
 Expected Output:
 ```
@@ -91,7 +92,8 @@ Expected Output:
 
 #### 👥 Terminal 2 — UserBehavior Service
 ```bash
-python grpc/server/userbehavior_server.py
+cd grpc/server
+python user_behavior_service.py
 ```
 Expected Output:
 ```
@@ -100,7 +102,8 @@ Expected Output:
 
 #### 🎧 Terminal 3 — Recommendation Service
 ```bash
-python grpc/server/recommendation_server.py
+cd grpc/server
+python recommendation_service.py
 ```
 Expected Output:
 ```
@@ -112,7 +115,8 @@ Expected Output:
 Once all services are running, open a **new terminal** and execute:
 
 ```bash
-python grpc/client/main_client.py
+cd  grpc/client
+python client.py
 ```
 
 This client will:
