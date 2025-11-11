@@ -1,16 +1,16 @@
 {
-  "timestamp": "2025-11-11T14:19:29.831697",
+  "timestamp": "2025-11-11T06:41:40.452000",
   "protocol": "XML-RPC",
-  "workflow_time": 6.180286645889282,
-  "mapreduce_time": 0.0009996891021728516,
-  "userbehavior_time": 0.0,
-  "recommendation_time": 0.0,
-  "total_processing_time": 0.0009996891021728516,
-  "network_overhead": 6.179286956787109,
+  "workflow_time": 0.027551651000976562,
+  "mapreduce_time": 0.0029981136322021484,
+  "userbehavior_time": 0.0019505023956298828,
+  "recommendation_time": 0.0011756420135498047,
+  "total_processing_time": 0.006124258041381836,
+  "network_overhead": 0.021427392959594727,
   "summary": {
     "total_services": 3,
-    "avg_service_time": 0.00033322970072428387,
-    "overhead_percentage": 99.98382455119881
+    "avg_service_time": 0.002041419347127279,
+    "overhead_percentage": 77.77172031844928
   },
   "detailed_results": {
     "mapreduce": {
@@ -20,7 +20,7 @@
         "Drake - S010": 2,
         "Imagine Dragons - S002": 1
       },
-      "processing_time": 0.0009996891021728516
+      "processing_time": 0.0029981136322021484
     },
     "userbehavior": {
       "user_stats": [
@@ -51,7 +51,7 @@
         "U003",
         "U004"
       ],
-      "processing_time": 0.0
+      "processing_time": 0.0019505023956298828
     },
     "recommendation": {
       "trending_songs": [
@@ -82,7 +82,7 @@
           "Taylor Swift - S004"
         ]
       },
-      "processing_time": 0.0
+      "processing_time": 0.0011756420135498047
     }
   }
 }

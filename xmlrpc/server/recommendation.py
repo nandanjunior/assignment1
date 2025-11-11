@@ -11,8 +11,8 @@ from collections import Counter
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-HOST = os.getenv('RECOMMENDATION_HOST_XMLRPC', '0.0.0.0')
-PORT = int(os.getenv('RECOMMENDATION_PORT_XMLRPC', '8005'))
+HOST = os.getenv('RECOMMENDATION_HOST', '0.0.0.0')
+PORT = int(os.getenv('RECOMMENDATION_PORT', '8005'))
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'results')
 os.makedirs(RESULTS_DIR, exist_ok=True)

@@ -1,0 +1,95 @@
+services:
+  # 1️⃣ Recommendation Service (Terminal)
+  xmlrpc-recommendation:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.xmlrpc.recommendation
+    container_name: xmlrpc-recommendation
+    ports:
+      - "8005:8005"
+    networks:
+      - xmlrpc-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - RECOMMENDATION_HOST=0.0.0.0
+      - RECOMMENDATION_PORT=8005
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8005\", allow_none=True).system.listMethods()' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+
+  # 2️⃣ UserBehavior Service 
+  xmlrpc-userbehavior:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.xmlrpc.userbehavior
+    container_name: xmlrpc-userbehavior
+    ports:
+      - "8003:8003"
+    networks:
+      - xmlrpc-network
+    depends_on:
+      xmlrpc-recommendation:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - USERBEHAVIOR_HOST=0.0.0.0
+      - USERBEHAVIOR_PORT=8003
+      - RECOMMENDATION_URL=http://xmlrpc-recommendation:8005
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8003\", allow_none=True).system.listMethods()' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+
+  # 3️⃣ MapReduce Service 
+  xmlrpc-mapreduce:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.xmlrpc.mapreduce
+    container_name: xmlrpc-mapreduce
+    ports:
+      - "8001:8001"
+    networks:
+      - xmlrpc-network
+    depends_on:
+      xmlrpc-userbehavior:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MAPREDUCE_HOST=0.0.0.0
+      - MAPREDUCE_PORT=8001
+      - USERBEHAVIOR_URL=http://xmlrpc-userbehavior:8003
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8001\", allow_none=True).system.listMethods()' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+
+  # 4️⃣ Client (entry point)
+  xmlrpc-client:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.xmlrpc.client
+    container_name: xmlrpc-client
+    depends_on:
+      xmlrpc-mapreduce:
+        condition: service_healthy
+    networks:
+      - xmlrpc-network
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MAPREDUCE_URL=http://xmlrpc-mapreduce:8001
+      - CSV_PATH=/app/data/stream_data.csv
+      - OUTPUT_FILE=/app/results/xmlrpc_docker_performance_metrics.json
+    volumes:
+      - ../results:/app/results
+    command: ["python", "client.py"]
+
+networks:
+  xmlrpc-network:
+    driver: bridge

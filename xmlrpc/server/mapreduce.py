@@ -15,9 +15,9 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 # Config
-HOST = os.getenv('MAPREDUCE_HOST_XMLRPC', '0.0.0.0')
-PORT = int(os.getenv('MAPREDUCE_PORT_XMLRPC', '8001'))
-NEXT_URL = os.getenv('USERBEHAVIOR_URL_XMLRPC', 'http://localhost:8003')
+HOST = os.getenv('MAPREDUCE_HOST', '0.0.0.0')
+PORT = int(os.getenv('MAPREDUCE_PORT', '8001'))
+NEXT_URL = os.getenv('USERBEHAVIOR_URL', 'http://localhost:8003')
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'results')
 os.makedirs(RESULTS_DIR, exist_ok=True)

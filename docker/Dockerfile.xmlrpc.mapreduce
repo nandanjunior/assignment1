@@ -1,0 +1,24 @@
+# Dockerfile for XML-RPC MapReduce Service 
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy shared services
+COPY services/ /app/services/
+
+# Copy MapReduce Service
+COPY xmlrpc/server/mapreduce.py /app/xmlrpc/server/
+
+ENV PYTHONUNBUFFERED=1
+ENV MAPREDUCE_HOST=0.0.0.0
+ENV MAPREDUCE_PORT=8001
+
+EXPOSE 8001
+
+WORKDIR /app/xmlrpc/server
+
+CMD ["python", "mapreduce.py"]

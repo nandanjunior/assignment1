@@ -1,0 +1,23 @@
+# Dockerfile for XML-RPC Client (Chained Microservices)
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy data
+COPY data/ /app/data/
+
+# Copy XML-RPC client code
+COPY xmlrpc/client/ /app/xmlrpc/client/
+
+# Create results directory
+RUN mkdir -p /app/results
+
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app/xmlrpc/client
+
+CMD ["python", "client.py"]

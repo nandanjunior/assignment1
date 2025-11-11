@@ -1,0 +1,24 @@
+
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy shared services
+COPY services/ /app/services/
+
+# Copy UserBehavior Service
+COPY xmlrpc/server/user_behavior.py /app/xmlrpc/server/
+
+ENV PYTHONUNBUFFERED=1
+ENV USERBEHAVIOR_HOST=0.0.0.0
+ENV USERBEHAVIOR_PORT=8003
+
+EXPOSE 8003
+
+WORKDIR /app/xmlrpc/server
+
+CMD ["python", "user_behavior.py"]

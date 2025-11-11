@@ -11,10 +11,11 @@ import json
 from datetime import datetime
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 CSV_PATH = os.getenv('CSV_PATH', os.path.join(PROJECT_ROOT, 'data', 'stream_data.csv'))
-MAPREDUCE_URL = os.getenv('MAPREDUCE_URL', 'http://localhost:8001')
-OUTPUT_FILE = os.getenv('OUTPUT_FILE', os.path.join(PROJECT_ROOT, 'results', 'run_xmlrpc_metrics.json'))
+MAPREDUCE_URL = os.getenv('MAPREDUCE_URL_XMLRPC', 'http://localhost:8001')
+OUTPUT_FILE = os.getenv('OUTPUT_FILE_XMLRPC', os.path.join(PROJECT_ROOT, 'results', 'run_xmlrpc_metrics.json'))
 
 def load_stream_csv(csv_path):
     records = []

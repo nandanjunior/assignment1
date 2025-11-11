@@ -12,9 +12,9 @@ from collections import defaultdict, Counter
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-HOST = os.getenv('USERBEHAVIOR_HOST_XMLRPC', '0.0.0.0')
-PORT = int(os.getenv('USERBEHAVIOR_PORT_XMLRPC', '8003'))
-NEXT_URL = os.getenv('RECOMMENDATION_URL_XMLRPC', 'http://localhost:8005')
+HOST = os.getenv('USERBEHAVIOR_HOST', '0.0.0.0')
+PORT = int(os.getenv('USERBEHAVIOR_PORT', '8003'))
+NEXT_URL = os.getenv('RECOMMENDATION_URL', 'http://localhost:8005')
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'results')
 os.makedirs(RESULTS_DIR, exist_ok=True)

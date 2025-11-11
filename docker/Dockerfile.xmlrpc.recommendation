@@ -1,0 +1,24 @@
+
+FROM python:3.13-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy shared services
+COPY services/ /app/services/
+
+# Copy Recommendation Service
+COPY xmlrpc/server/recommendation.py /app/xmlrpc/server/
+
+ENV PYTHONUNBUFFERED=1
+ENV RECOMMENDATION_HOST=0.0.0.0
+ENV RECOMMENDATION_PORT=8005
+
+EXPOSE 8005
+
+WORKDIR /app/xmlrpc/server
+
+CMD ["python", "recommendation.py"]
