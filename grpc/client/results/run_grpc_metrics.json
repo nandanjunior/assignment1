@@ -1,18 +1,19 @@
 {
-  "timestamp": "2025-11-11T03:10:50.233211",
+  "timestamp": "2025-11-16T04:14:29.204995",
   "workflow": "Client \u2192 MapReduce \u2192 UserBehavior \u2192 Recommendation \u2192 Client",
   "performance": {
-    "mapreduce_time": 0.003187417984008789,
-    "userbehavior_time": 0.0006618499755859375,
-    "recommendation_time": 0.00047779083251953125,
-    "total_workflow_time": 0.2747485637664795
+    "mapreduce_time": 0.0007677078247070312,
+    "userbehavior_time": 0.000270843505859375,
+    "recommendation_time": 0.00016379356384277344,
+    "genre_time": 0.0007479190826416016,
+    "total_workflow_time": 0.0354008674621582
   },
   "mapreduce_results": {
     "top_songs": {
       "Coldplay - S001": 2,
       "Drake - S010": 2,
-      "Taylor Swift - S004": 1,
-      "Imagine Dragons - S002": 1
+      "Imagine Dragons - S002": 1,
+      "Taylor Swift - S004": 1
     }
   },
   "userbehavior_results": {
@@ -49,8 +50,8 @@
     "trending_songs": [
       "Drake - S010",
       "Coldplay - S001",
-      "Taylor Swift - S004",
-      "Imagine Dragons - S002"
+      "Imagine Dragons - S002",
+      "Taylor Swift - S004"
     ],
     "recommendations": {
       "U002": [
@@ -58,21 +59,33 @@
         "Coldplay - S001",
         "Imagine Dragons - S002"
       ],
-      "U003": [
-        "Coldplay - S001",
-        "Taylor Swift - S004",
-        "Imagine Dragons - S002"
-      ],
-      "U001": [
-        "Drake - S010",
-        "Taylor Swift - S004",
-        "Imagine Dragons - S002"
-      ],
       "U004": [
         "Drake - S010",
         "Coldplay - S001",
         "Taylor Swift - S004"
+      ],
+      "U001": [
+        "Drake - S010",
+        "Imagine Dragons - S002",
+        "Taylor Swift - S004"
+      ],
+      "U003": [
+        "Coldplay - S001",
+        "Imagine Dragons - S002",
+        "Taylor Swift - S004"
       ]
+    }
+  },
+  "genre_analysis_results": {
+    "top_genres": [
+      "Pop",
+      "Hip-Hop",
+      "Rock"
+    ],
+    "genre_counts": {
+      "Pop": 3,
+      "Hip-Hop": 2,
+      "Rock": 1
     }
   }
 }

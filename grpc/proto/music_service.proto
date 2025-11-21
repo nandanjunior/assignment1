@@ -13,12 +13,17 @@ service RecommendationService {
   rpc Recommend (RecommendationRequest) returns (RecommendationResponse) {}
 }
 
+service GenreAnalysisService {
+  rpc AnalyzeGenres (StreamList) returns (GenreAnalysisResponse) {}
+}
+
 message StreamRecord {
   string user_id = 1;
   string song_id = 2;
   string artist = 3;
   int32 duration = 4; // seconds
   string timestamp = 5; // ISO format
+  string genre = 6;  
 }
 
 message StreamList {
@@ -50,6 +55,12 @@ message RecommendationRequest {
 message RecommendationResponse {
   repeated string trending_songs = 1;
   map<string, repeated_string> recommendations = 2;
+  double processing_time = 3;
+}
+
+message GenreAnalysisResponse {
+  map<string, int32> genre_counts = 1;
+  repeated string top_genres = 2;
   double processing_time = 3;
 }
 

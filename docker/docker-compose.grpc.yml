@@ -46,6 +46,24 @@ services:
       - grpc-network
     restart: unless-stopped
   
+  grpc-genre-analysis:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc.genre
+    container_name: grpc-genre-analysis
+    environment:
+      - GENRE_ANALYSIS_PORT=50057
+    ports:
+      - "50057:50057"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+    depends_on:
+      - grpc-mapreduce
+      - grpc-userbehavior
+      - grpc-recommendation
+
+
 networks:
   grpc-network:
     driver: bridge
