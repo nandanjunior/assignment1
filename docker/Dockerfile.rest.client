@@ -1,0 +1,27 @@
+# Dockerfile for REST Client (Music Streaming)
+FROM python:3.13-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy data
+COPY data/ /app/data/
+
+# Copy REST client code
+COPY rest/client/ /app/rest/client/
+
+# Create results directory
+RUN mkdir -p /app/results
+
+# Environment variable to prevent Python from buffering output
+ENV PYTHONUNBUFFERED=1
+
+# Set working directory to REST client
+WORKDIR /app/rest/client
+
+# Default command to run client
+CMD ["python", "client.py"]
