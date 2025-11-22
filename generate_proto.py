@@ -47,15 +47,9 @@ def generate_grpc_code():
     print(f"Server files: {server_output}/")
     print(f"Client files: {client_output}/")
     print("\nYou can now run:")
-<<<<<<< HEAD
-    print("  cd grpc")
-    print("  cd server .\\run_server.ps1  (in one terminal)")
-    print("  cd client .\\run_client.ps1  (in another terminal)")
-=======
     print("  cd grpc/server")
     print("  .\\run_services.ps1  (in one terminal)")
     print("  .\\run_client.ps1  (in another terminal)")
->>>>>>> 26825d1a3c4df3cf1031b965bdaa03cad00a0c76
 
 
 if __name__ == "__main__":

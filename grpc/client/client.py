@@ -260,7 +260,7 @@ def main():
     }
 
     save_result(os.path.join(RESULTS_DIR, "grpc_performance_metrics.json"), metrics)
-    print(f"[Client] Performance metrics saved to {RESULTS_DIR}/grpc_performance_metrics.json\n")
+    print(f"[Client] Performance metrics saved to {RESULTS_DIR}\grpc_performance_metrics.json\n")
 
 
 if __name__ == "__main__":
