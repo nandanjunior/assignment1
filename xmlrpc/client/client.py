@@ -159,9 +159,8 @@ def main():
             "detailed_results": final_results
         }
 
-        output_path = os.path.join(OUTPUT_FILE, "xmlrpc_performance_metrics.json")
-        save_result(output_path, metrics)
-        print(f"[Client] Performance metrics saved to {output_path}\n")  # <- fixed Unicode escape issue
+        save_result(os.path.join(OUTPUT_FILE, "xmlrpc_performance_metrics.json"), metrics)
+        print(f"[Client] Performance metrics saved to {OUTPUT_FILE}\\xmlrpc_performance_metrics.json\n")
 
     except Exception as e:
         print(f"[Client] Workflow error: {e}")

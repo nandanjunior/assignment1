@@ -6,13 +6,38 @@ services:
       dockerfile: docker/Dockerfile.xmlrpc.recommendation
     container_name: xmlrpc-recommendation
     ports:
-      - "8005:8005"
+      - "8007:8007"
     networks:
       - xmlrpc-network
     environment:
       - PYTHONUNBUFFERED=1
       - RECOMMENDATION_HOST=0.0.0.0
-      - RECOMMENDATION_PORT=8005
+      - RECOMMENDATION_PORT=8007
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8007\", allow_none=True).system.listMethods()' || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+      start_period: 10s
+
+  # 2️⃣ GenreAnalysis Service 
+  xmlrpc-genre:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.xmlrpc.genre
+    container_name: xmlrpc-genre
+    ports:
+      - "8005:8005"
+    networks:
+      - xmlrpc-network
+    depends_on:
+      xmlrpc-recommendation:
+        condition: service_healthy
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GENRE_ANALYSIS_HOST=0.0.0.0
+      - GENRE_ANALYSIS_PORT=8005
+      - RECOMMENDATION_URL=http://xmlrpc-recommendation:8007
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8005\", allow_none=True).system.listMethods()' || exit 1"]
       interval: 5s
@@ -31,13 +56,13 @@ services:
     networks:
       - xmlrpc-network
     depends_on:
-      xmlrpc-recommendation:
+      xmlrpc-genre:
         condition: service_healthy
     environment:
       - PYTHONUNBUFFERED=1
       - USERBEHAVIOR_HOST=0.0.0.0
       - USERBEHAVIOR_PORT=8003
-      - RECOMMENDATION_URL=http://xmlrpc-recommendation:8005
+      - GENRE_ANALYSIS_URL=http://xmlrpc-genre:8005
     healthcheck:
       test: ["CMD-SHELL", "python -c 'import xmlrpc.client; xmlrpc.client.ServerProxy(\"http://localhost:8003\", allow_none=True).system.listMethods()' || exit 1"]
       interval: 5s
@@ -85,9 +110,10 @@ services:
       - PYTHONUNBUFFERED=1
       - MAPREDUCE_URL=http://xmlrpc-mapreduce:8001
       - CSV_PATH=/app/data/stream_data.csv
-      - OUTPUT_FILE=/app/results/xmlrpc_docker_performance_metrics.json
+      - OUTPUT_FILE=/app/xmlrpc/results
     volumes:
-      - ../results:/app/results
+      - ./xmlrpc/results:/app/xmlrpc/results
+     #- ../results:/app/results
     command: ["python", "client.py"]
 
 networks:
