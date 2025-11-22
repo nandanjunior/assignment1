@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..',
 
 HOST = os.getenv('USERBEHAVIOR_HOST', '0.0.0.0')
 PORT = int(os.getenv('USERBEHAVIOR_PORT', '8003'))
-NEXT_URL = os.getenv('RECOMMENDATION_URL', 'http://localhost:8005')
+NEXT_URL = os.getenv('GENRE_ANALYSIS_URL', 'http://localhost:8005')
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'results')
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -61,12 +61,6 @@ class UserBehaviorXMLHandler:
                 'top_users': top_users,
                 'processing_time': processing_time
             }
-
-            try:
-                with open(os.path.join(RESULTS_DIR, 'userbehavior_xmlrpc_metrics.json'), 'w', encoding='utf-8') as f:
-                    json.dump({'processing_time': processing_time, 'num_users': len(user_stats)}, f, indent=2)
-            except Exception:
-                pass
 
             print(f"[UserBehavior] Processed {len(user_stats)} users")
             for s in user_stats[:10]:
