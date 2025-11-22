@@ -48,8 +48,8 @@ def generate_grpc_code():
     print(f"Client files: {client_output}/")
     print("\nYou can now run:")
     print("  cd grpc")
-    print("  .\\run_server.ps1  (in one terminal)")
-    print("  .\\run_client.ps1  (in another terminal)")
+    print("  cd server .\\run_server.ps1  (in one terminal)")
+    print("  cd client .\\run_client.ps1  (in another terminal)")
 
 
 if __name__ == "__main__":

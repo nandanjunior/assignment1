@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-11-11T03:10:50.233211",
+  "timestamp": "2025-11-21T14:48:57.359372",
   "workflow": "Client \u2192 MapReduce \u2192 UserBehavior \u2192 Recommendation \u2192 Client",
   "performance": {
-    "mapreduce_time": 0.003187417984008789,
-    "userbehavior_time": 0.0006618499755859375,
-    "recommendation_time": 0.00047779083251953125,
-    "total_workflow_time": 0.2747485637664795
+    "mapreduce_time": 0.0010004043579101562,
+    "userbehavior_time": 0.0,
+    "recommendation_time": 0.0,
+    "total_workflow_time": 0.13820791244506836
   },
   "mapreduce_results": {
     "top_songs": {
@@ -47,16 +47,21 @@
   },
   "recommendation_results": {
     "trending_songs": [
-      "Drake - S010",
       "Coldplay - S001",
+      "Drake - S010",
       "Taylor Swift - S004",
       "Imagine Dragons - S002"
     ],
     "recommendations": {
       "U002": [
-        "Drake - S010",
         "Coldplay - S001",
+        "Drake - S010",
         "Imagine Dragons - S002"
+      ],
+      "U004": [
+        "Coldplay - S001",
+        "Drake - S010",
+        "Taylor Swift - S004"
       ],
       "U003": [
         "Coldplay - S001",
@@ -67,11 +72,6 @@
         "Drake - S010",
         "Taylor Swift - S004",
         "Imagine Dragons - S002"
-      ],
-      "U004": [
-        "Drake - S010",
-        "Coldplay - S001",
-        "Taylor Swift - S004"
       ]
     }
   }

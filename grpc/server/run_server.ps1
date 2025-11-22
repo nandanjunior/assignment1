@@ -1,4 +1,4 @@
-# run_services.ps1
+# run_server.ps1
 Write-Host "Starting Music Streaming Microservices..." -ForegroundColor Green
 Write-Host ""
 
