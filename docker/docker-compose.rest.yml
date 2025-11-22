@@ -1,0 +1,91 @@
+services:
+  rest-mapreduce:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rest.mapreduce
+    container_name: rest-mapreduce
+    environment:
+      - MAPREDUCE_PORT=5001
+      - USERBEHAVIOR_URL=http://rest-userbehavior:5003/userbehavior
+    ports:
+      - "5001:5001"
+    networks:
+      - rest-network
+    restart: unless-stopped
+    depends_on:
+      - rest-userbehavior
+
+  rest-userbehavior:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rest.userbehavior
+    container_name: rest-userbehavior
+    environment:
+      - USERBEHAVIOR_PORT=5003
+      - GENRE_ANALYSIS_URL=http://rest-genre-analysis:5005/genre
+    ports:
+      - "5003:5003"
+    networks:
+      - rest-network
+    restart: unless-stopped
+    depends_on:
+      - rest-genre-analysis
+
+  rest-genre-analysis:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rest.genre
+    container_name: rest-genre-analysis
+    environment:
+      - GENRE_ANALYSIS_PORT=5005
+      - RECOMMENDATION_URL=http://rest-recommendation:5007/recommend
+    ports:
+      - "5005:5005"
+    networks:
+      - rest-network
+    restart: unless-stopped
+    depends_on:
+      - rest-recommendation   
+
+  rest-recommendation:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rest.recommendation
+    container_name: rest-recommendation
+    environment:
+      - RECOMMENDATION_PORT=5007
+    ports:
+      - "5007:5007"
+    networks:
+      - rest-network
+    restart: unless-stopped
+
+  rest-client:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rest.client
+    container_name: rest-client
+    environment:
+      - MAPREDUCE_HOST=rest-mapreduce
+      - MAPREDUCE_PORT=5001
+      - USERBEHAVIOR_HOST=rest-userbehavior
+      - USERBEHAVIOR_PORT=5003
+      - GENRE_ANALYSIS_HOST=rest-genre-analysis
+      - GENRE_ANALYSIS_PORT=5005
+      - RECOMMENDATION_HOST=rest-recommendation
+      - RECOMMENDATION_PORT=5007
+      - RESULTS_DIR=/app/rest/results
+    depends_on:
+      - rest-mapreduce
+      - rest-userbehavior
+      - rest-genre-analysis
+      - rest-recommendation
+    networks:
+      - rest-network
+    volumes:
+      - ./rest/results:/app/rest/results
+    restart: "no"
+
+networks:
+  rest-network:
+    driver: bridge

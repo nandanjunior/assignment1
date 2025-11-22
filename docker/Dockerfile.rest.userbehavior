@@ -1,0 +1,20 @@
+# Dockerfile.rest.userbehavior
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY rest/server/user_behavior_service.py ./rest/server/
+COPY data/ ./data/
+
+# Environment variables
+ENV USERBEHAVIOR_PORT=5003
+ENV GENRE_ANALYSIS_URL=http://rest-genre-analysis:5005/genre
+
+EXPOSE 5003
+
+CMD ["python", "-u", "rest/server/user_behavior_service.py"]
