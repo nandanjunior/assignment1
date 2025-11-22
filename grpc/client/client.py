@@ -16,13 +16,17 @@ MAPREDUCE_HOST = os.getenv("MAPREDUCE_HOST", "localhost")
 MAPREDUCE_PORT = os.getenv("MAPREDUCE_PORT", "50051")
 USERBEHAVIOR_HOST = os.getenv("USERBEHAVIOR_HOST", "localhost")
 USERBEHAVIOR_PORT = os.getenv("USERBEHAVIOR_PORT", "50053")
-RECOMMENDATION_HOST = os.getenv("RECOMMENDATION_HOST", "localhost")
-RECOMMENDATION_PORT = os.getenv("RECOMMENDATION_PORT", "50055")
 GENRE_ANALYSIS_HOST = os.getenv("GENRE_ANALYSIS_HOST", "localhost")
-GENRE_ANALYSIS_PORT = os.getenv("GENRE_ANALYSIS_PORT", "50057")
+GENRE_ANALYSIS_PORT = os.getenv("GENRE_ANALYSIS_PORT", "50055")
+RECOMMENDATION_HOST = os.getenv("RECOMMENDATION_HOST", "localhost")
+RECOMMENDATION_PORT = os.getenv("RECOMMENDATION_PORT", "50057")
+
 
 DATA_CSV = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "stream_data.csv")
-RESULTS_DIR = os.getenv("RESULTS_DIR", "./results")
+RESULTS_DIR = os.getenv(
+    "RESULTS_DIR",
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), "results")
+)
 os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # ───────────────────────────────────────────────
@@ -103,6 +107,29 @@ def call_userbehavior(records):
 
 
 # ───────────────────────────────────────────────
+# Genre Analysis Service
+# ───────────────────────────────────────────────
+def call_genre_analysis(records):
+    addr = f"{GENRE_ANALYSIS_HOST}:{GENRE_ANALYSIS_PORT}"
+    print("=" * 70)
+    print("[Genre Analysis Service] Global Genre Play Analysis")
+    print("=" * 70)
+    start = time.time()
+    with grpc.insecure_channel(addr) as channel:
+        stub = music_service_pb2_grpc.GenreAnalysisServiceStub(channel)
+        resp = stub.AnalyzeGenres(music_service_pb2.StreamList(records=records))
+    elapsed = time.time() - start
+
+    print(f"Processing Time: {resp.processing_time:.4f}s (Roundtrip {elapsed:.4f}s)")
+    print("-" * 70)
+    print("Top Genres:")
+    for i, genre in enumerate(resp.top_genres, 1):
+        print(f"  {i}. {genre} ({resp.genre_counts[genre]} plays)")
+    print()
+    return resp
+
+
+# ───────────────────────────────────────────────
 # Recommendation Service
 # ───────────────────────────────────────────────
 def call_recommendation(play_counts, user_stats):
@@ -135,31 +162,6 @@ def call_recommendation(play_counts, user_stats):
         for user, rec in resp.recommendations.items():
             print(f"  • {user}: {', '.join(rec.values)}")
 
-    print()
-    return resp
-
-# ───────────────────────────────────────────────
-# Genre Analysis Service
-# ───────────────────────────────────────────────
-GENRE_ANALYSIS_HOST = os.getenv("GENRE_ANALYSIS_HOST", "localhost")
-GENRE_ANALYSIS_PORT = os.getenv("GENRE_ANALYSIS_PORT", "50057")
-
-def call_genre_analysis(records):
-    addr = f"{GENRE_ANALYSIS_HOST}:{GENRE_ANALYSIS_PORT}"
-    print("=" * 70)
-    print("[Genre Analysis Service] Global Genre Play Analysis")
-    print("=" * 70)
-    start = time.time()
-    with grpc.insecure_channel(addr) as channel:
-        stub = music_service_pb2_grpc.GenreAnalysisServiceStub(channel)
-        resp = stub.AnalyzeGenres(music_service_pb2.StreamList(records=records))
-    elapsed = time.time() - start
-
-    print(f"Processing Time: {resp.processing_time:.4f}s (Roundtrip {elapsed:.4f}s)")
-    print("-" * 70)
-    print("Top Genres:")
-    for i, genre in enumerate(resp.top_genres, 1):
-        print(f"  {i}. {genre} ({resp.genre_counts[genre]} plays)")
     print()
     return resp
 
@@ -196,11 +198,12 @@ def main():
     # 2️⃣ UserBehavior
     userbehavior_resp = call_userbehavior(records)
 
-    # 3️⃣ Recommendation
+    # 3️⃣ Genre Analysis
+    genre_resp = call_genre_analysis(records)
+
+    # 4️⃣ Recommendation
     recommendation_resp = call_recommendation(mapreduce_resp, userbehavior_resp)
 
-    # 4️⃣ Genre Analysis
-    genre_resp = call_genre_analysis(records)
 
     total_time = time.time() - total_start
 
@@ -209,8 +212,8 @@ def main():
     print("=" * 70)
     print(f"MapReduce Time:      {mapreduce_resp.processing_time:.4f}s")
     print(f"UserBehavior Time:   {userbehavior_resp.processing_time:.4f}s")
-    print(f"Recommendation Time: {recommendation_resp.processing_time:.4f}s")
     print(f"Genre Analysis Time: {genre_resp.processing_time:.4f}s")
+    print(f"Recommendation Time: {recommendation_resp.processing_time:.4f}s")
     print(f"Total Workflow Time: {total_time:.4f}s")
     print("=" * 70)
     print("✓ All services completed successfully!")
@@ -223,8 +226,8 @@ def main():
         "performance": {
             "mapreduce_time": mapreduce_resp.processing_time,
             "userbehavior_time": userbehavior_resp.processing_time,
-            "recommendation_time": recommendation_resp.processing_time,
             "genre_time": genre_resp.processing_time,
+            "recommendation_time": recommendation_resp.processing_time,
             "total_workflow_time": total_time,
         },
         "mapreduce_results": {
@@ -241,6 +244,10 @@ def main():
             ],
             "top_users": list(userbehavior_resp.top_users),
         },
+        "genre_analysis_results": {
+            "top_genres": list(genre_resp.top_genres),
+            "genre_counts": dict(genre_resp.genre_counts),
+        },
         "recommendation_results": {
             "trending_songs": list(recommendation_resp.trending_songs),
             "recommendations": {
@@ -248,15 +255,12 @@ def main():
                 for user, recs in recommendation_resp.recommendations.items()
             },
         },
-        "genre_analysis_results": {
-            "top_genres": list(genre_resp.top_genres),
-            "genre_counts": dict(genre_resp.genre_counts),
-        },
+        
 
     }
 
-    save_result(os.path.join(RESULTS_DIR, "run_grpc_metrics.json"), metrics)
-    print(f"[Client] Performance metrics saved to {RESULTS_DIR}/run_grpc_metrics.json\n")
+    save_result(os.path.join(RESULTS_DIR, "grpc_performance_metrics.json"), metrics)
+    print(f"[Client] Performance metrics saved to {RESULTS_DIR}/grpc_performance_metrics.json\n")
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ def save_metrics(path, metrics):
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(metrics, f, indent=2)
 
-PORT = int(os.getenv("RECOMMENDATION_PORT", "50055"))
+PORT = int(os.getenv("RECOMMENDATION_PORT", "50057"))
 
 class RecommendationHandler(music_service_pb2_grpc.RecommendationServiceServicer):
     def Recommend(self, request, context):

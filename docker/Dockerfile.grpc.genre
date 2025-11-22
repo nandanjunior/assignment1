@@ -17,15 +17,16 @@ COPY generate_proto.py .
 RUN python generate_proto.py
 
 # Copy server code
-COPY grpc/server/genre_analysis_server.py ./grpc/server/
+COPY grpc/server/genre_analysis_service.py ./grpc/server/
 
 # Copy generated files
 RUN mkdir -p grpc/server/generated && \
     cp grpc/server/generated/*.py grpc/server/generated/ || true
 
 # Set environment variables (can be overridden)
-ENV GENRE_ANALYSIS_PORT=50057
+ENV SERVICE_PORT=50055
+ENV RECOMMENDATION_ADDRESS=recommendation:50057
 
-EXPOSE 50057
+EXPOSE 50055
 
-CMD ["python", "-u", "grpc/server/genre_analysis_server.py"]
+CMD ["python", "-u", "grpc/server/genre_analysis_service.py"]

@@ -169,78 +169,6 @@ class UserBehaviorService(object):
             _registered_method=True)
 
 
-class RecommendationServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Recommend = channel.unary_unary(
-                '/music.RecommendationService/Recommend',
-                request_serializer=music__service__pb2.RecommendationRequest.SerializeToString,
-                response_deserializer=music__service__pb2.RecommendationResponse.FromString,
-                _registered_method=True)
-
-
-class RecommendationServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
-
-    def Recommend(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_RecommendationServiceServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-            'Recommend': grpc.unary_unary_rpc_method_handler(
-                    servicer.Recommend,
-                    request_deserializer=music__service__pb2.RecommendationRequest.FromString,
-                    response_serializer=music__service__pb2.RecommendationResponse.SerializeToString,
-            ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-            'music.RecommendationService', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('music.RecommendationService', rpc_method_handlers)
-
-
- # This class is part of an EXPERIMENTAL API.
-class RecommendationService(object):
-    """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def Recommend(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(
-            request,
-            target,
-            '/music.RecommendationService/Recommend',
-            music__service__pb2.RecommendationRequest.SerializeToString,
-            music__service__pb2.RecommendationResponse.FromString,
-            options,
-            channel_credentials,
-            insecure,
-            call_credentials,
-            compression,
-            wait_for_ready,
-            timeout,
-            metadata,
-            _registered_method=True)
-
-
 class GenreAnalysisServiceStub(object):
     """Missing associated documentation comment in .proto file."""
 
@@ -302,6 +230,78 @@ class GenreAnalysisService(object):
             '/music.GenreAnalysisService/AnalyzeGenres',
             music__service__pb2.StreamList.SerializeToString,
             music__service__pb2.GenreAnalysisResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+
+class RecommendationServiceStub(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Recommend = channel.unary_unary(
+                '/music.RecommendationService/Recommend',
+                request_serializer=music__service__pb2.RecommendationRequest.SerializeToString,
+                response_deserializer=music__service__pb2.RecommendationResponse.FromString,
+                _registered_method=True)
+
+
+class RecommendationServiceServicer(object):
+    """Missing associated documentation comment in .proto file."""
+
+    def Recommend(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_RecommendationServiceServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Recommend': grpc.unary_unary_rpc_method_handler(
+                    servicer.Recommend,
+                    request_deserializer=music__service__pb2.RecommendationRequest.FromString,
+                    response_serializer=music__service__pb2.RecommendationResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'music.RecommendationService', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('music.RecommendationService', rpc_method_handlers)
+
+
+ # This class is part of an EXPERIMENTAL API.
+class RecommendationService(object):
+    """Missing associated documentation comment in .proto file."""
+
+    @staticmethod
+    def Recommend(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/music.RecommendationService/Recommend',
+            music__service__pb2.RecommendationRequest.SerializeToString,
+            music__service__pb2.RecommendationResponse.FromString,
             options,
             channel_credentials,
             insecure,

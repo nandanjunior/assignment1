@@ -9,12 +9,12 @@ service UserBehaviorService {
   rpc AnalyzeUsers (StreamList) returns (UserStatsList) {}
 }
 
-service RecommendationService {
-  rpc Recommend (RecommendationRequest) returns (RecommendationResponse) {}
-}
-
 service GenreAnalysisService {
   rpc AnalyzeGenres (StreamList) returns (GenreAnalysisResponse) {}
+}
+
+service RecommendationService {
+  rpc Recommend (RecommendationRequest) returns (RecommendationResponse) {}
 }
 
 message StreamRecord {

@@ -25,7 +25,7 @@ from services.genre_analysis_service import GenreAnalysisStreamService
 # ───────────────────────────────────────────────
 # Server port
 # ───────────────────────────────────────────────
-PORT = int(os.getenv("GENRE_ANALYSIS_PORT", "50057"))
+PORT = int(os.getenv("GENRE_ANALYSIS_PORT", "50055"))
 
 # ───────────────────────────────────────────────
 # Utility

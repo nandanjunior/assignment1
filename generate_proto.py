@@ -47,8 +47,8 @@ def generate_grpc_code():
     print(f"Server files: {server_output}/")
     print(f"Client files: {client_output}/")
     print("\nYou can now run:")
-    print("  cd grpc")
-    print("  .\\run_server.ps1  (in one terminal)")
+    print("  cd grpc/server")
+    print("  .\\run_services.ps1  (in one terminal)")
     print("  .\\run_client.ps1  (in another terminal)")
 
 
