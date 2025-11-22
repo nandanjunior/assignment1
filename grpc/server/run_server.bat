@@ -22,14 +22,19 @@ echo Starting User Behavior Service (Port 50053)...
 start "User Behavior Service" cmd /k "cd /d %SCRIPT_DIR% && python user_behavior_service.py"
 timeout /t 2 /nobreak >nul
 
+REM Start Genre Analysis Service
+echo Starting Genre Analysis Service (Port 50055)...
+start "Genre Analysis Service" cmd /k "cd /d %SCRIPT_DIR% && python genre_analysis_service.py"
+timeout /t 2 /nobreak >nul
+
 REM Start Recommendation Service
-echo Starting Recommendation Service (Port 50055)...
+echo Starting Recommendation Service (Port 50057)...
 start "Recommendation Service" cmd /k "cd /d %SCRIPT_DIR% && python recommendation_service.py"
 timeout /t 2 /nobreak >nul
 
 echo.
-echo ✅ All 3 services started!
-echo Service Chain: MapReduce(50051) → UserBehavior(50053) → Recommendation(50055)
+echo ✅ All 4 services started!
+echo Service Chain: MapReduce(50051) → UserBehavior(50053) → GenreAnalysis(50055) → Recommendation(50057)
 echo.
 echo Now run the client: cd ..\client && run_client.bat
 pause
