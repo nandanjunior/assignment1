@@ -17,8 +17,8 @@ COPY grpc/server/recommendation_service.py ./grpc/server/
 RUN mkdir -p grpc/server/generated && \
     cp grpc/server/generated/*.py grpc/server/generated/ || true
 
-ENV SERVICE_PORT=50055
+ENV SERVICE_PORT=50057
 
-EXPOSE 50055
+EXPOSE 50057
 
 CMD ["python", "-u", "grpc/server/recommendation_service.py"]

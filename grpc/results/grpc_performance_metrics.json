@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD:grpc/client/results/run_grpc_metrics.json
   "timestamp": "2025-11-21T14:48:57.359372",
   "workflow": "Client \u2192 MapReduce \u2192 UserBehavior \u2192 Recommendation \u2192 Client",
   "performance": {
@@ -6,6 +7,16 @@
     "userbehavior_time": 0.0,
     "recommendation_time": 0.0,
     "total_workflow_time": 0.13820791244506836
+=======
+  "timestamp": "2025-11-22T23:55:31.793422",
+  "workflow": "Client \u2192 MapReduce \u2192 UserBehavior \u2192 Recommendation \u2192 Client",
+  "performance": {
+    "mapreduce_time": 0.006621599197387695,
+    "userbehavior_time": 0.0014674663543701172,
+    "genre_time": 0.004443168640136719,
+    "recommendation_time": 0.001577138900756836,
+    "total_workflow_time": 0.36746668815612793
+>>>>>>> 26825d1a3c4df3cf1031b965bdaa03cad00a0c76:grpc/results/grpc_performance_metrics.json
   },
   "mapreduce_results": {
     "top_songs": {
@@ -44,6 +55,18 @@
       "U003",
       "U004"
     ]
+  },
+  "genre_analysis_results": {
+    "top_genres": [
+      "Pop",
+      "Hip-Hop",
+      "Rock"
+    ],
+    "genre_counts": {
+      "Pop": 3,
+      "Rock": 1,
+      "Hip-Hop": 2
+    }
   },
   "recommendation_results": {
     "trending_songs": [

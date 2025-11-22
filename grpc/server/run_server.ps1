@@ -22,14 +22,19 @@ Write-Host "Starting User Behavior Service (Port 50053)..." -ForegroundColor Yel
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$scriptDir'; & '$venvActivate'; python user_behavior_service.py"
 Start-Sleep -Seconds 2
 
+# Start Genre Analysis Service
+Write-Host "Starting Genre Analysis Service (Port 50055)..." -ForegroundColor Yellow
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$scriptDir'; & '$venvActivate'; python genre_analysis_service.py"
+Start-Sleep -Seconds 2
+
 # Start Recommendation Service
-Write-Host "Starting Recommendation Service (Port 50055)..." -ForegroundColor Yellow
+Write-Host "Starting Recommendation Service (Port 50057)..." -ForegroundColor Yellow
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$scriptDir'; & '$venvActivate'; python recommendation_service.py"
 Start-Sleep -Seconds 2
 
 Write-Host ""
-Write-Host "✅ All 3 services started successfully!" -ForegroundColor Green
-Write-Host "Service Chain: MapReduce(50051) → UserBehavior(50053) → Recommendation(50055)" -ForegroundColor Cyan
+Write-Host "✅ All 4 services started successfully!" -ForegroundColor Green
+Write-Host "Service Chain: MapReduce(50051) → UserBehavior(50053) → GenreAnalysis(50055) → Recommendation(50057)" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Now run the client:" -ForegroundColor Yellow
 Write-Host "  cd ..\client" -ForegroundColor White
