@@ -62,13 +62,6 @@ class MapReduceXMLHandler:
                 'processing_time': processing_time
             }
 
-            # optional per-service metrics dump
-            try:
-                with open(os.path.join(RESULTS_DIR, 'mapreduce_xmlrpc_metrics.json'), 'w', encoding='utf-8') as f:
-                    json.dump({'processing_time': processing_time, 'unique_keys': len(play_counts)}, f, indent=2)
-            except Exception:
-                pass
-
             print(f"[MapReduce] Processed {n} records")
             print(f"[MapReduce] Top counts (sample):")
             for i, (k, v) in enumerate(sorted(play_counts.items(), key=lambda x: x[1], reverse=True)[:10], 1):

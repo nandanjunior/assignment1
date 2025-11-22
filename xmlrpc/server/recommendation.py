@@ -12,7 +12,7 @@ from collections import Counter
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 HOST = os.getenv('RECOMMENDATION_HOST', '0.0.0.0')
-PORT = int(os.getenv('RECOMMENDATION_PORT', '8005'))
+PORT = int(os.getenv('RECOMMENDATION_PORT', '8007'))
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'results')
 os.makedirs(RESULTS_DIR, exist_ok=True)
@@ -51,12 +51,6 @@ class RecommendationXMLHandler:
                 'recommendations': recommendations,
                 'processing_time': processing_time
             }
-
-            try:
-                with open(os.path.join(RESULTS_DIR, 'recommendation_xmlrpc_metrics.json'), 'w', encoding='utf-8') as f:
-                    json.dump({'processing_time': processing_time, 'num_trending': len(top5)}, f, indent=2)
-            except Exception:
-                pass
 
             print(f"[Recommendation] Trending (top {len(top5)}): {top5}")
             print(f"[Recommendation] Processing time: {processing_time:.4f} seconds")
