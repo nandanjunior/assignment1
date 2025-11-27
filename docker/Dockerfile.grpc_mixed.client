@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY services/ ./services/
+COPY data/ ./data/
+COPY grpc/proto/ ./grpc/proto/
+COPY generate_proto.py .
+
+RUN python generate_proto.py
+
+# Copy client code
+COPY grpc/client/client.py ./grpc/client/
+
+RUN mkdir -p grpc/client/generated && \
+    cp grpc/client/generated/*.py grpc/client/generated/ || true
+
+ENV MAPREDUCE_ADDRESS=host.docker.internal:50051
+ENV OUTPUT_FILE=/app/results/grpc_docker_performance_metrics.json
+
+# Wait for services to be ready, then run client
+CMD sleep 10 && python grpc/client/client.py

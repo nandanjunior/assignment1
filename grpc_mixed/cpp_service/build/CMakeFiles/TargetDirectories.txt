@@ -1,0 +1,3 @@
+/Users/triishyenraaj/assignment1/grpc_mixed/cpp_service/build/CMakeFiles/genre_analysis_server.dir
+/Users/triishyenraaj/assignment1/grpc_mixed/cpp_service/build/CMakeFiles/edit_cache.dir
+/Users/triishyenraaj/assignment1/grpc_mixed/cpp_service/build/CMakeFiles/rebuild_cache.dir

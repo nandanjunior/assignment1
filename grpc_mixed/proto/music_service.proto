@@ -1,0 +1,72 @@
+syntax = "proto3";
+package music;
+
+option go_package = "grpc_mixed/server/generated;generated";
+
+service MapReduceService {
+  rpc AggregateStream (StreamList) returns (PlayCounts) {}
+}
+
+service UserBehaviorService {
+  rpc AnalyzeUsers (StreamList) returns (UserStatsList) {}
+}
+
+service GenreAnalysisService {
+  rpc AnalyzeGenres (StreamList) returns (GenreAnalysisResponse) {}
+}
+
+service RecommendationService {
+  rpc Recommend (RecommendationRequest) returns (RecommendationResponse) {}
+}
+
+message StreamRecord {
+  string user_id = 1;
+  string song_id = 2;
+  string artist = 3;
+  int32 duration = 4; // seconds
+  string timestamp = 5; // ISO format
+  string genre = 6;  
+}
+
+message StreamList {
+  repeated StreamRecord records = 1;
+}
+
+message PlayCounts {
+  map<string, int32> play_counts = 1; // "Artist - SongID" -> count
+  double processing_time = 2;
+}
+
+message UserStat {
+  string user_id = 1;
+  int32 total_time = 2;
+  string top_artist = 3;
+}
+
+message UserStatsList {
+  repeated UserStat user_stats = 1;
+  repeated string top_users = 2; // user ids
+  double processing_time = 3;
+}
+
+message RecommendationRequest {
+  PlayCounts play_counts = 1;
+  UserStatsList user_stats = 2;
+}
+
+message RecommendationResponse {
+  repeated string trending_songs = 1;
+  map<string, repeated_string> recommendations = 2;
+  double processing_time = 3;
+}
+
+message GenreAnalysisResponse {
+  map<string, int32> genre_counts = 1;
+  repeated string top_genres = 2;
+  double processing_time = 3;
+}
+
+// helper message to allow map<string, repeated string>
+message repeated_string {
+  repeated string values = 1;
+}

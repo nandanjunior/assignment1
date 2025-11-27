@@ -150,7 +150,7 @@ def call_recommendation(play_counts, user_stats):
         resp = stub.Recommend(req)
     elapsed = time.time() - start
 
-    print(f"Processing Time: {resp.processing_time:.4f}s (Roundtrip {elapsed:.4f}s)")
+    print(f"Processing Time: {resp.processing_time:.8f}s (Roundtrip {elapsed:.8f}s)")
     print("-" * 70)
     print("Trending Songs:")
     for i, song in enumerate(resp.trending_songs, 1):
@@ -210,11 +210,11 @@ def main():
     print("=" * 70)
     print("🎯 WORKFLOW SUMMARY")
     print("=" * 70)
-    print(f"MapReduce Time:      {mapreduce_resp.processing_time:.4f}s")
-    print(f"UserBehavior Time:   {userbehavior_resp.processing_time:.4f}s")
-    print(f"Genre Analysis Time: {genre_resp.processing_time:.4f}s")
-    print(f"Recommendation Time: {recommendation_resp.processing_time:.4f}s")
-    print(f"Total Workflow Time: {total_time:.4f}s")
+    print(f"MapReduce Time:      {mapreduce_resp.processing_time:.8f}s")
+    print(f"UserBehavior Time:   {userbehavior_resp.processing_time:.8f}s")
+    print(f"Genre Analysis Time: {genre_resp.processing_time:.8f}s")
+    print(f"Recommendation Time: {recommendation_resp.processing_time:.8f}s")
+    print(f"Total Workflow Time: {total_time:.8f}s")
     print("=" * 70)
     print("✓ All services completed successfully!")
     print("=" * 70)

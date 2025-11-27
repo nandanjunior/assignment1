@@ -1,0 +1,32 @@
+# Base image for all services
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
+COPY services/ ./services/
+COPY data/ ./data/
+COPY grpc/proto/ ./grpc/proto/
+COPY generate_proto.py .
+
+# Generate gRPC code
+RUN python generate_proto.py
+
+# Copy server code
+COPY grpc/server/genre_analysis_service.py ./grpc/server/
+
+# Copy generated files
+RUN mkdir -p grpc/server/generated && \
+    cp grpc/server/generated/*.py grpc/server/generated/ || true
+
+# Set environment variables (can be overridden)
+ENV SERVICE_PORT=50055
+ENV RECOMMENDATION_ADDRESS=recommendation:50057
+
+EXPOSE 50055
+
+CMD ["python", "-u", "grpc/server/genre_analysis_service.py"]

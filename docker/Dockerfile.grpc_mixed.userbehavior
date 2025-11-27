@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY services/ ./services/
+COPY data/ ./data/
+COPY grpc/proto/ ./grpc/proto/
+COPY generate_proto.py .
+
+RUN python generate_proto.py
+
+COPY grpc/server/user_behavior_service.py ./grpc/server/
+
+RUN mkdir -p grpc/server/generated && \
+    cp grpc/server/generated/*.py grpc/server/generated/ || true
+
+ENV SERVICE_PORT=50053
+ENV GENRE_ANALYSIS_ADDRESS=genre-analysis:50055
+
+EXPOSE 50053
+
+CMD ["python", "-u", "grpc/server/user_behavior_service.py"]
