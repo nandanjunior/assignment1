@@ -1,33 +1,33 @@
 version: "3.9"
 
 services:
-  grpc-genre-analysis:
+  grpc-mixed-genre-analysis:
     build:
       context: ..
       dockerfile: docker/Dockerfile.grpc_mixed.genre_cpp
-    container_name: grpc-genre-analysis
+    container_name: grpc-mixed-genre-analysis
     ports:
       - "50055:50055"
     networks:
       - grpc-network
     restart: unless-stopped
 
-  grpc-recommendation:
+  grpc-mixed-recommendation:
     build:
       context: ..
       dockerfile: docker/Dockerfile.grpc_mixed.recommendation_go
-    container_name: grpc-recommendation
+    container_name: grpc-mixed-recommendation
     ports:
       - "50057:50057"
     networks:
       - grpc-network
     restart: unless-stopped
 
-  grpc-userbehavior:
+  grpc-mixed-userbehavior:
     build:
       context: ..
       dockerfile: docker/Dockerfile.grpc_mixed.userbehavior
-    container_name: grpc-userbehavior
+    container_name: grpc-mixed-userbehavior
     environment:
       - USERBEHAVIOR_PORT=50053
       - GENRE_ANALYSIS_ADDRESS=grpc-genre-analysis:50055
@@ -37,13 +37,13 @@ services:
       - grpc-network
     restart: unless-stopped
     depends_on:
-      - grpc-genre-analysis
+      - grpc-mixed-genre-analysis
 
-  grpc-mapreduce:
+  grpc-mixed-mapreduce:
     build:
       context: ..
       dockerfile: docker/Dockerfile.grpc_mixed.mapreduce
-    container_name: grpc-mapreduce
+    container_name: grpc-mixed-mapreduce
     environment:
       - MAPREDUCE_PORT=50051
       - USERBEHAVIOR_ADDRESS=grpc-userbehavior:50053
@@ -53,28 +53,28 @@ services:
       - grpc-network
     restart: unless-stopped
     depends_on:
-      - grpc-userbehavior
+      - grpc-mixed-userbehavior
 
-  grpc-client:
+  grpc-mixed-client:
     build:
       context: ..
       dockerfile: docker/Dockerfile.grpc_mixed.client
-    container_name: grpc-client
+    container_name: grpc-mixed-client
     environment:
-      - MAPREDUCE_HOST=grpc-mapreduce
+      - MAPREDUCE_HOST=grpc-mixed-mapreduce
       - MAPREDUCE_PORT=50051
-      - USERBEHAVIOR_HOST=grpc-userbehavior
+      - USERBEHAVIOR_HOST=grpc-mixed-userbehavior
       - USERBEHAVIOR_PORT=50053
-      - GENRE_ANALYSIS_HOST=grpc-genre-analysis
+      - GENRE_ANALYSIS_HOST=grpc-mixed-genre-analysis
       - GENRE_ANALYSIS_PORT=50055
-      - RECOMMENDATION_HOST=grpc-recommendation
+      - RECOMMENDATION_HOST=grpc-mixed-recommendation
       - RECOMMENDATION_PORT=50057
       - RESULTS_DIR=/app/grpc-mixed/results
     depends_on:
-      - grpc-mapreduce
-      - grpc-userbehavior
-      - grpc-genre-analysis
-      - grpc-recommendation
+      - grpc-mixed-mapreduce
+      - grpc-mixed-userbehavior
+      - grpc-mixed-genre-analysis
+      - grpc-mixed-recommendation
     networks:
       - grpc-network
     volumes:

@@ -2,32 +2,24 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy client code
-COPY grpc_mixed/client/ ./client/
-
-# Copy dependencies and proto generator from assignment1/
 COPY requirements.txt .
-COPY generate_proto.py .
-
-# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Generate proto code
+COPY services/ ./services/
+COPY data/ ./data/
+COPY grpc/proto/ ./grpc/proto/
+COPY generate_proto.py .
+
 RUN python generate_proto.py
 
-# Make results folder
-RUN mkdir -p /app/grpc-mixed/results
+# Copy client code
+COPY grpc/client/client.py ./grpc/client/
 
-WORKDIR /app/client
+RUN mkdir -p grpc/client/generated && \
+    cp grpc/client/generated/*.py grpc/client/generated/ || true
 
-ENV MAPREDUCE_HOST=grpc-mapreduce
-ENV MAPREDUCE_PORT=50051
-ENV USERBEHAVIOR_HOST=grpc-userbehavior
-ENV USERBEHAVIOR_PORT=50053
-ENV GENRE_ANALYSIS_HOST=grpc-genre-analysis
-ENV GENRE_ANALYSIS_PORT=50055
-ENV RECOMMENDATION_HOST=grpc-recommendation
-ENV RECOMMENDATION_PORT=50057
-ENV RESULTS_DIR=/app/grpc-mixed/results
+ENV MAPREDUCE_ADDRESS=host.docker.internal:50051
+ENV OUTPUT_FILE=/app/results/grpc_docker_performance_metrics.json
 
-CMD ["python", "client.py"]
+# Wait for services to be ready, then run client
+CMD sleep 10 && python grpc/client/client.py

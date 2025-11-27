@@ -222,7 +222,7 @@ def main():
  # ================== SAVE DETAILED METRICS ==================
     metrics = {
         "timestamp": datetime.now().isoformat(),
-        "workflow": "Client → MapReduce → UserBehavior → Recommendation → Client",
+        "workflow": "Client → MapReduce → UserBehavior → Genre Analysis → Recommendation → Client",
         "performance": {
             "mapreduce_time": mapreduce_resp.processing_time,
             "userbehavior_time": userbehavior_resp.processing_time,

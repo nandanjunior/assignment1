@@ -181,7 +181,7 @@ def main():
     print("=" * 70)
     print("🎵 MUSIC STREAMING ANALYTICS CLIENT")
     print("=" * 70)
-    print("Workflow: Client → MapReduce → UserBehavior → Recommendation → Client")
+    print("Workflow: Client → MapReduce → UserBehavior → Genre Analysis → Recommendation → Client")
     print("=" * 70)
     print()
 
@@ -222,7 +222,7 @@ def main():
  # ================== SAVE DETAILED METRICS ==================
     metrics = {
         "timestamp": datetime.now().isoformat(),
-        "workflow": "Client → MapReduce → UserBehavior → Recommendation → Client",
+        "workflow": "Client → MapReduce → UserBehavior → Genre Analysis → Recommendation → Client",
         "performance": {
             "mapreduce_time": mapreduce_resp.processing_time,
             "userbehavior_time": userbehavior_resp.processing_time,
