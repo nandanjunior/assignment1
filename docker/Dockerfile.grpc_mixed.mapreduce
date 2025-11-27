@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy MapReduce service code
+COPY grpc_mixed/server/ ./server/
+COPY grpc_mixed/client/ ./client/
+
+# Copy dependencies and proto generator from assignment1/
+COPY requirements.txt .
+COPY generate_proto.py .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Generate proto code
+RUN python generate_proto.py
+
+# Make results folder
+RUN mkdir -p /app/grpc-mixed/results
+
+WORKDIR /app/server
+
+ENV MAPREDUCE_PORT=50051
+EXPOSE 50051
+CMD ["python", "mapreduce_stream_service.py"]

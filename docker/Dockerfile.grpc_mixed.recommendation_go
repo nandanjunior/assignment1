@@ -1,0 +1,19 @@
+FROM golang:1.25-alpine
+
+WORKDIR /app
+
+COPY grpc_mixed/go.mod .
+COPY grpc_mixed/go.sum .
+RUN go mod download
+
+COPY grpc_mixed/server/generated/ ./server/generated/
+COPY grpc_mixed/go_service/recommendation_service.go ./go_service/
+COPY grpc_mixed/server/recommendation_service.go ./server/
+
+WORKDIR /app/server
+
+RUN go build -o recommendation_server recommendation_service.go
+
+ENV RECOMMENDATION_PORT=50057
+EXPOSE 50057
+CMD ["./recommendation_server"]

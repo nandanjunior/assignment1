@@ -1,0 +1,33 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy client code
+COPY grpc_mixed/client/ ./client/
+
+# Copy dependencies and proto generator from assignment1/
+COPY requirements.txt .
+COPY generate_proto.py .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Generate proto code
+RUN python generate_proto.py
+
+# Make results folder
+RUN mkdir -p /app/grpc-mixed/results
+
+WORKDIR /app/client
+
+ENV MAPREDUCE_HOST=grpc-mapreduce
+ENV MAPREDUCE_PORT=50051
+ENV USERBEHAVIOR_HOST=grpc-userbehavior
+ENV USERBEHAVIOR_PORT=50053
+ENV GENRE_ANALYSIS_HOST=grpc-genre-analysis
+ENV GENRE_ANALYSIS_PORT=50055
+ENV RECOMMENDATION_HOST=grpc-recommendation
+ENV RECOMMENDATION_PORT=50057
+ENV RESULTS_DIR=/app/grpc-mixed/results
+
+CMD ["python", "client.py"]

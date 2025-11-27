@@ -1,0 +1,48 @@
+# Dockerfile.grpc_mixed.genre_cpp
+
+# Use Ubuntu 22.04 as base
+FROM ubuntu:22.04
+
+# Set working directory
+WORKDIR /app
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    git \
+    wget \
+    unzip \
+    autoconf \
+    libtool \
+    pkg-config \
+    protobuf-compiler \
+    libprotobuf-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install gRPC from source
+RUN git clone --recurse-submodules -b v1.56.0 https://github.com/grpc/grpc /tmp/grpc \
+    && mkdir -p /tmp/grpc/build \
+    && cd /tmp/grpc/build \
+    && cmake .. \
+    && make -j$(nproc) \
+    && make install \
+    && ldconfig \
+    && rm -rf /tmp/grpc
+
+# Copy server source files
+COPY grpc_mixed/cpp_service/ ./cpp_service/
+COPY grpc_mixed/server/generated_cpp/ ./generated_cpp/
+COPY grpc_mixed/server/genre_analysis_service.cpp ./
+COPY grpc_mixed/cpp_service/CMakeLists.txt ./
+
+# Build the C++ server
+RUN mkdir -p build && \
+    cmake -S . -B build && \
+    cmake --build build
+
+# Set working directory to build output
+WORKDIR /app/build
+
+# Default command to run server (replace if needed)
+CMD ["./genre_analysis_service"]

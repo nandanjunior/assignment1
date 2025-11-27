@@ -1,0 +1,86 @@
+version: "3.9"
+
+services:
+  grpc-genre-analysis:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc_mixed.genre_cpp
+    container_name: grpc-genre-analysis
+    ports:
+      - "50055:50055"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+
+  grpc-recommendation:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc_mixed.recommendation_go
+    container_name: grpc-recommendation
+    ports:
+      - "50057:50057"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+
+  grpc-userbehavior:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc_mixed.userbehavior
+    container_name: grpc-userbehavior
+    environment:
+      - USERBEHAVIOR_PORT=50053
+      - GENRE_ANALYSIS_ADDRESS=grpc-genre-analysis:50055
+    ports:
+      - "50053:50053"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+    depends_on:
+      - grpc-genre-analysis
+
+  grpc-mapreduce:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc_mixed.mapreduce
+    container_name: grpc-mapreduce
+    environment:
+      - MAPREDUCE_PORT=50051
+      - USERBEHAVIOR_ADDRESS=grpc-userbehavior:50053
+    ports:
+      - "50051:50051"
+    networks:
+      - grpc-network
+    restart: unless-stopped
+    depends_on:
+      - grpc-userbehavior
+
+  grpc-client:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.grpc_mixed.client
+    container_name: grpc-client
+    environment:
+      - MAPREDUCE_HOST=grpc-mapreduce
+      - MAPREDUCE_PORT=50051
+      - USERBEHAVIOR_HOST=grpc-userbehavior
+      - USERBEHAVIOR_PORT=50053
+      - GENRE_ANALYSIS_HOST=grpc-genre-analysis
+      - GENRE_ANALYSIS_PORT=50055
+      - RECOMMENDATION_HOST=grpc-recommendation
+      - RECOMMENDATION_PORT=50057
+      - RESULTS_DIR=/app/grpc-mixed/results
+    depends_on:
+      - grpc-mapreduce
+      - grpc-userbehavior
+      - grpc-genre-analysis
+      - grpc-recommendation
+    networks:
+      - grpc-network
+    volumes:
+      - ./grpc-mixed/results:/app/grpc-mixed/results
+    restart: "no"
+
+networks:
+  grpc-network:
+    driver: bridge
